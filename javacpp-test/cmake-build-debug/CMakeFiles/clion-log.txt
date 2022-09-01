@@ -1,0 +1,4 @@
+D:\jetbrains\clion\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=D:/jetbrains/clion/bin/ninja/win/ninja.exe -G Ninja -S E:\Code\C++\clion\javacpp-test -B E:\Code\C++\clion\javacpp-test\cmake-build-debug
+-- Configuring done
+-- Generating done
+-- Build files have been written to: E:/Code/C++/clion/javacpp-test/cmake-build-debug

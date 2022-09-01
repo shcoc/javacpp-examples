@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- Change to your groupe ID -->
+    <groupId>com.zsaltedfish</groupId>
+    <!-- Choose your artifact id -->
+    <artifactId>test</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<!--        跳过自动生成java类(不生成为 true)-->
+        <javacpp.parser.skip>true
+        </javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true -->
+        <!--        跳过自动生成cpp类(不生成为 true)-->
+        <javacpp.compiler.skip>true
+        </javacpp.compiler.skip> <!-- To skip native compilation phase: -Djavacpp.compiler.skip=true -->
+    </properties>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <plugins>
+            <!--            打全量包插件-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>test.prest.Test</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--            javacpp打包插件-->
+            <plugin>
+                <groupId>org.bytedeco</groupId>
+                <artifactId>javacpp</artifactId>
+                <version>1.5.7</version>
+                <configuration>
+                    <properties>windows-x86_64</properties>
+                    <propertyKeysAndValues>
+                        <property>
+                            <name>platform.root</name>
+                            <value>windows-x86_64</value>
+                        </property>
+                        <!--                        cpp编译器 g++ 或者 cl的路径  在其他地方编译可以不配置-->
+                        <!--                        <property>-->
+                        <!--                            <name>platform.compiler</name>-->
+                        <!--                            <value>${javacpp.platform.compiler}</value>-->
+                        <!--                        </property>-->
+                    </propertyKeysAndValues>
+                    <classPath>${project.build.outputDirectory}</classPath>
+                    <!--                    c++ 编译器需要的include路径 在其他地方编译可以不配置 -->
+                    <includePaths>
+                        <includePath>${basedir}/cpp/include/</includePath>
+                    </includePaths>
+                    <!--                    c++ 编译器需要的lib路径 在其他地方编译可以不配置 -->
+                    <!--                  <linkPaths>-->
+                    <!--                      <linkPath>${project.build.sourceDirectory}/lib/</linkPath>-->
+                    <!--                  </linkPaths>-->
+                    <!--                    c++ 编译器需要的exe bin路径 在其他地方编译可以不配置 -->
+                    <!--                   <preloadPaths>-->
+                    <!--                       <preloadPath>${project.build.sourceDirectory}/lib/</preloadPath>-->
+                    <!--                   </preloadPaths>-->
+                    <!--                    编码-->
+                    <encoding>utf-8</encoding>
+                    <!--                    是否编译cpp-->
+                    <compile>false</compile>
+                </configuration>
+                <executions>
+                    <!--                  第一次执行mojo的exec生成对应的globa和target-->
+                    <execution>
+                        <id>javacpp.parser</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${javacpp.parser.skip}</skip>
+                            <!--                          生成的时java文件所以放 src/main/java-->
+                            <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+                            <classOrPackageName>test.prest.*</classOrPackageName>
+                        </configuration>
+                    </execution>
+                    <!-- 第二次执行mojo的exec生成对应的cpp 如果compile为true则调用命令编译cpp成dll-->
+                    <execution>
+                        <id>javacpp.compiler</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${javacpp.compiler.skip}</skip>
+                            <classOrPackageName>test.**</classOrPackageName>
+                            <outputDirectory>${project.basedir}/cpp</outputDirectory>
+                            <copyLibs>true</copyLibs>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>1.5.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacpp</artifactId>
+            <version>1.5.7</version>
+            <classifier>windows-x86_64</classifier>
+        </dependency>
+    </dependencies>
+</project>

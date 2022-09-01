@@ -1,0 +1,5 @@
+E:/Code/C++/clion/javacpp-test/cmake-build-debug/CMakeFiles/test.dir
+E:/Code/C++/clion/javacpp-test/cmake-build-debug/CMakeFiles/testADD.dir
+E:/Code/C++/clion/javacpp-test/cmake-build-debug/CMakeFiles/jniTest.dir
+E:/Code/C++/clion/javacpp-test/cmake-build-debug/CMakeFiles/edit_cache.dir
+E:/Code/C++/clion/javacpp-test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
